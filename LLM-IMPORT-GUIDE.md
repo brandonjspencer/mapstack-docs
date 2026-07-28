@@ -1,0 +1,285 @@
+# Building import-ready files with an LLM
+
+MapStack imports **CSV**. There are two files:
+
+- a **sitemap CSV** — the page tree, and (optionally) the off-site **entry
+  points** (channels) in the *same file*; and
+- a **journeys CSV** — ordered paths through pages that already exist.
+
+This document is the precise spec for both, plus copy-paste prompts you can hand
+to an LLM (ChatGPT, Claude, etc.) so it produces files MapStack accepts on the
+first try. Everything here matches MapStack's actual parser.
+
+> **Give an LLM this whole file.** The prompt blocks below are self-contained;
+> paste one into your LLM along with your content, and it will emit a valid file.
+
+---
+
+## Contents
+
+- [How import works](#how-import-works)
+- [Sitemap CSV](#sitemap-csv)
+  - [Pages](#pages)
+  - [Entry-point rows (channels)](#entry-point-rows-channels)
+- [Journeys CSV](#journeys-csv)
+- [Prompt: generate a sitemap CSV](#prompt-generate-a-sitemap-csv)
+- [Prompt: generate a journeys CSV](#prompt-generate-a-journeys-csv)
+- [Validation checklist](#validation-checklist)
+
+---
+
+## How import works
+
+- **Sitemap CSV → pages (+ entry points).** Importing from the **dashboard**
+  creates a *new project*; importing from inside an **open sitemap** (the
+  editor's import icon) adds everything as a *new version* and makes it active.
+  The same file carries the page tree **and** the off-site entry points: any row
+  whose `Type` is **"Entry point"** becomes a channel, and its optional landing
+  page re-attaches to a page by **Path first, then Title**.
+- **Journeys CSV → journeys.** Importing (the journeys bar's **Import** pill)
+  re-attaches each step to the **current version's** pages, matched by **Path
+  first, then Title**. The pages must **already exist** — so import the sitemap
+  first, then the journeys that reference it.
+- Import never sends ids. Hierarchy, ordering, and links are rebuilt from the
+  columns described below.
+
+---
+
+## Sitemap CSV
+
+### Header row
+
+```
+Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing
+```
+
+- Header matching is **case-insensitive and space-insensitive**.
+- Only **`Level`** and **`Title`** are required. Every other column is optional
+  and may be omitted entirely (drop the column) or left blank per row.
+- The last two columns (**`Channel`**, **`Landing`**) are only used by
+  entry-point rows — omit them if your sitemap has no channels.
+- Accepted **aliases**: `Path` ↔ `Slug`, `Page URL` ↔ `URL`, `Google Doc` ↔
+  `Doc`.
+
+### Pages
+
+| Column | Required | Values | Notes |
+| --- | --- | --- | --- |
+| **Level** | ✅ | integer `0, 1, 2, …` | Tree depth. Top-level pages are `0`. A row's **parent is the nearest row above it with `Level` one less**. Increase by exactly **1** per level of nesting. |
+| **Title** | ✅ | text | The page name. Blank becomes `Untitled`. |
+| **Type** | — | `Page` or `Hierarchy label` | Anything that isn't `Hierarchy label` or `Entry point` is a **Page**. Use `Hierarchy label` for grouping/section rows that aren't real pages. Defaults to `Page`. |
+| **Path** | — | text, e.g. `/pricing` | The URL slug / extension path. Used to match journey steps and channel landings, so keep it stable and unique. |
+| **Status** | — | `complete`, `draft`, `unassigned` | Case-insensitive. Anything unrecognized becomes `unassigned`. |
+| **Notes** | — | text | Free-form. May contain commas/newlines if quoted. |
+| **Page URL** | — | URL | The live page URL. |
+| **Google Doc** | — | URL | A linked Google Doc. |
+| **Figma** | — | URL | A linked Figma file. |
+
+**Encoding the hierarchy (important).** There are **no id or parent columns**.
+The tree is rebuilt purely from the **`Level` integer + row order**: rows are
+read top to bottom, and a row's parent is the closest preceding row whose
+`Level` is exactly one smaller. So a child must appear **after** its parent and
+use `parent Level + 1`.
+
+```
+Home                (Level 0)
+  Products          (Level 1)
+    Widgets         (Level 2)
+    Gadgets         (Level 2)
+  Pricing           (Level 1)
+About               (Level 0)
+```
+
+### Entry-point rows (channels)
+
+Off-site **entry points** are the channels that funnel visitors into your site
+(organic search, paid media, social, email, an in-person event, an LLM
+citation, a referral, or a custom channel). Add them as extra rows **after the
+pages**, using these columns:
+
+| Column | Value for an entry-point row |
+| --- | --- |
+| **Type** | `Entry point` (this is what marks the row as a channel) |
+| **Title** | the channel's **label** (e.g. `Google – brand terms`) |
+| **Channel** | the channel kind — a name like `Organic search` or the key `organic_search`. Unknown/blank → **Other channel**. Sets the color automatically. |
+| **Landing** | *optional* — the landing page, given as its **Path** (e.g. `/pricing`) or its **Title**. Matched Path-first, then Title. |
+| *(all other columns)* | leave blank |
+
+- The channel's color comes from its kind — there's no color column.
+- A `Landing` that doesn't match any page just imports the channel **unlinked**
+  (it isn't dropped). Import the sitemap's pages in the same file, so landings
+  resolve.
+
+**Channel names**
+
+| Name | Key |
+| --- | --- |
+| Organic search | `organic_search` |
+| LLM citation | `llm_citation` |
+| Paid media | `paid_media` |
+| Social post | `social` |
+| In-person event | `event` |
+| Email | `email` |
+| Referral | `referral` |
+| Other channel | `custom` |
+
+> A journey may *optionally* start at one of these channels, but that link is
+> set in the app (in journey build mode), not in any CSV.
+
+### Quoting rules (CSV correctness)
+
+MapStack's parser is RFC-4180-style. To stay safe:
+
+- **Wrap every field in double quotes** (this is what MapStack's own export does).
+- Escape a literal double-quote inside a field by **doubling it**: `"` → `""`.
+- Use `,` as the delimiter. `CRLF` or `LF` line endings are both fine; a UTF-8
+  BOM is tolerated.
+
+### Complete example
+
+```csv
+"Level","Title","Type","Path","Status","Notes","Page URL","Google Doc","Figma","Channel","Landing"
+"0","Home","Page","/","complete","Primary landing page","https://example.com/","","","",""
+"1","Products","Hierarchy label","","unassigned","Section grouping","","","","",""
+"2","Widgets","Page","/products/widgets","draft","","","","","",""
+"2","Gadgets","Page","/products/gadgets","draft","Launch in Q3","","","","",""
+"1","Pricing","Page","/pricing","complete","","https://example.com/pricing","","","",""
+"0","About","Page","/about","complete","","","","","",""
+"","Google – brand terms","Entry point","","","","","","","Organic search","/"
+"","Q3 launch campaign","Entry point","","","","","","","Paid media","/pricing"
+"","Newsletter","Entry point","","","","","","","Email",""
+```
+
+This produces a two-root sitemap (`Home`, `About`) with `Products` grouping
+`Widgets`/`Gadgets`, plus three off-site channels — the first two landing on
+`Home` and `Pricing`, the newsletter with no landing page.
+
+---
+
+## Journeys CSV
+
+A journeys CSV describes ordered paths **through pages that already exist** in
+the sitemap you're importing into.
+
+### Header row
+
+```
+Journey,Color,Step,Title,Path
+```
+
+- Only **`Journey`** and **`Title`** are required.
+
+### Columns
+
+| Column | Required | Values | Notes |
+| --- | --- | --- | --- |
+| **Journey** | ✅ | text | The journey name. **All rows with the same name form one journey.** |
+| **Color** | — | hex, e.g. `#38bdf8` | 3–8 hex digits after `#`. Only the **first** row of each journey is read for color; invalid/blank falls back to a default. |
+| **Step** | — | integer `1, 2, 3, …` | Order within the journey. If omitted, rows keep their file order. |
+| **Title** | ✅ | text | Must match a page's title in the target version (fallback match). |
+| **Path** | — | text, e.g. `/pricing` | The page's path. **Matched first**, before Title — the reliable key. |
+
+### How steps are matched to pages
+
+Each step is resolved against the **current version's** pages by **Path**
+(exact, trimmed), then **Title** (exact, trimmed). A step that matches **no**
+page is **skipped**; a journey where **every** step fails to match is **not
+created**. So prefer `Path`, and make `Path`/`Title` exactly match the sitemap.
+
+### Complete example
+
+```csv
+"Journey","Color","Step","Title","Path"
+"Buyer path","#22a06b","1","Home","/"
+"Buyer path","#22a06b","2","Pricing","/pricing"
+"Buyer path","#22a06b","3","Widgets","/products/widgets"
+"Research path","#7c5cff","1","Home","/"
+"Research path","#7c5cff","2","About","/about"
+```
+
+---
+
+## Prompt: generate a sitemap CSV
+
+Paste this into your LLM, then describe the site you want (or paste existing
+content, a URL list, a spec, etc.):
+
+```text
+You are generating a CSV file that will be imported into MapStack, a sitemap
+builder. Output ONLY the CSV — no prose, no code fences.
+
+Rules:
+- First line is exactly this header:
+  Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing
+- Wrap EVERY field in double quotes. Escape any double quote inside a field by
+  doubling it ("").
+- PAGE rows: Level is the tree depth as an integer (top-level = 0; a child uses
+  parent Level + 1; a row's parent is the nearest row above with Level exactly
+  one less, so list parents before children). Type is "Page" for real pages or
+  "Hierarchy label" for section/grouping rows. Path is the URL slug (e.g.
+  /pricing), unique. Status is one of: complete, draft, unassigned. Notes,
+  Page URL, Google Doc, Figma are optional. Leave Channel and Landing blank on
+  page rows.
+- OPTIONAL off-site channels: after the page rows, you MAY add entry-point rows.
+  For each, set Type to "Entry point", put the label in Title, the channel in
+  Channel (one of: Organic search, LLM citation, Paid media, Social post,
+  In-person event, Email, Referral, Other channel), and OPTIONALLY the landing
+  page's path (or title) in Landing. Leave Level and the page columns blank.
+- Do not invent id or parent columns. Hierarchy comes only from Level + order.
+
+Now build the sitemap for: <DESCRIBE YOUR SITE HERE>
+```
+
+---
+
+## Prompt: generate a journeys CSV
+
+Do this **after** the sitemap exists. The easiest source of exact titles/paths is
+the sitemap itself: in MapStack, open **Download → CSV** and paste that file in.
+
+```text
+You are generating a CSV file of user journeys to import into MapStack. Output
+ONLY the CSV — no prose, no code fences.
+
+Rules:
+- First line is exactly this header: Journey,Color,Step,Title,Path
+- Wrap EVERY field in double quotes; escape inner quotes by doubling them ("").
+- Each journey is a set of rows sharing the same "Journey" name.
+- Step is an integer starting at 1 giving the order of pages in that journey.
+- Color is a hex value like #38bdf8. Use the SAME color on every row of a given
+  journey; the first row's color wins.
+- Title and Path must EXACTLY match pages that already exist in the sitemap.
+  Prefer Path as the match key (matched before Title). A step that matches no
+  page is dropped, and a journey with zero matching steps is not created.
+
+Here is the current sitemap CSV, exported from MapStack (use the Title and Path
+of its PAGE rows; ignore any row whose Type is "Entry point"):
+<PASTE THE DOWNLOADED SITEMAP CSV HERE>
+
+Now build these journeys: <DESCRIBE THE JOURNEYS YOU WANT>
+```
+
+---
+
+## Validation checklist
+
+Before importing, confirm the file:
+
+**Sitemap CSV**
+- [ ] First line is the header (at least `Level,Title`; add `Channel,Landing` if
+      you include entry-point rows).
+- [ ] Page rows: `Level` is an integer, children come after parents, nesting
+      increases by 1; `Type` is `Page`/`Hierarchy label`; `Status` is
+      `complete`/`draft`/`unassigned` (or blank).
+- [ ] Entry-point rows: `Type` is `Entry point`, `Channel` is a known name/key
+      (or left blank → `custom`), and any `Landing` matches a page (else it
+      imports unlinked).
+- [ ] Fields are double-quoted; inner quotes doubled.
+
+**Journeys CSV**
+- [ ] Header is `Journey,Color,Step,Title,Path` (at least `Journey,Title`).
+- [ ] Every `Path`/`Title` matches an existing page in the target version.
+- [ ] `Step` numbers order each journey; `Color` is a valid `#hex`, consistent
+      within each journey.
+- [ ] The sitemap was imported **first**.
+```
