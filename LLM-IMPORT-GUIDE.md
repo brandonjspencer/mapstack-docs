@@ -102,13 +102,14 @@ pages**, using these columns:
 | **Type** | `Entry point` (this is what marks the row as a channel) |
 | **Title** | the channel's **label** (e.g. `Google – brand terms`) |
 | **Channel** | the channel kind — a name like `Organic search` or the key `organic_search`. Unknown/blank → **Other channel**. Sets the color automatically. |
-| **Landing** | *optional* — the landing page, given as its **Path** (e.g. `/pricing`) or its **Title**. Matched Path-first, then Title. |
+| **Landing** | *optional* — one or more landing pages this channel drives traffic to, **pipe-separated** (e.g. `/pricing \| /home`). Each is given as its **Path** or **Title** and matched Path-first, then Title. |
 | *(all other columns)* | leave blank |
 
 - The channel's color comes from its kind — there's no color column.
-- A `Landing` that doesn't match any page just imports the channel **unlinked**
-  (it isn't dropped). Import the sitemap's pages in the same file, so landings
-  resolve.
+- A channel can land on **several pages** — separate them with `|`. Any
+  reference that doesn't match a page is simply skipped; the channel still
+  imports (with its other/zero landings). Import the sitemap's pages in the same
+  file, so landings resolve.
 
 **Channel names**
 
@@ -146,13 +147,13 @@ MapStack's parser is RFC-4180-style. To stay safe:
 "1","Pricing","Page","/pricing","complete","","https://example.com/pricing","","","",""
 "0","About","Page","/about","complete","","","","","",""
 "","Google – brand terms","Entry point","","","","","","","Organic search","/"
-"","Q3 launch campaign","Entry point","","","","","","","Paid media","/pricing"
+"","Q3 launch campaign","Entry point","","","","","","","Paid media","/ | /pricing"
 "","Newsletter","Entry point","","","","","","","Email",""
 ```
 
 This produces a two-root sitemap (`Home`, `About`) with `Products` grouping
-`Widgets`/`Gadgets`, plus three off-site channels — the first two landing on
-`Home` and `Pricing`, the newsletter with no landing page.
+`Widgets`/`Gadgets`, plus three off-site channels — Google on `Home`, the Q3
+campaign on **both** `Home` and `Pricing`, and the newsletter with no landing.
 
 ---
 
@@ -224,7 +225,8 @@ Rules:
   For each, set Type to "Entry point", put the label in Title, the channel in
   Channel (one of: Organic search, LLM citation, Paid media, Social post,
   In-person event, Email, Referral, Other channel), and OPTIONALLY the landing
-  page's path (or title) in Landing. Leave Level and the page columns blank.
+  page's path (or title) in Landing — for several landing pages, separate them
+  with a pipe (e.g. "/ | /pricing"). Leave Level and the page columns blank.
 - Do not invent id or parent columns. Hierarchy comes only from Level + order.
 
 Now build the sitemap for: <DESCRIBE YOUR SITE HERE>
@@ -272,8 +274,8 @@ Before importing, confirm the file:
       increases by 1; `Type` is `Page`/`Hierarchy label`; `Status` is
       `complete`/`draft`/`unassigned` (or blank).
 - [ ] Entry-point rows: `Type` is `Entry point`, `Channel` is a known name/key
-      (or left blank → `custom`), and any `Landing` matches a page (else it
-      imports unlinked).
+      (or left blank → `custom`), and each `Landing` (pipe-separated for several)
+      matches a page (unmatched ones are skipped).
 - [ ] Fields are double-quoted; inner quotes doubled.
 
 **Journeys CSV**

@@ -169,16 +169,20 @@ left** of the sitemap.
   existing entry point reveals a **+** to add another (same interaction as
   sitemap nodes). The canvas auto-fits so the new lane is in view.
 - **Edit** — click the **⋮** on an entry point to open its popover: set the
-  **label**, pick the **channel** (which sets its color and glyph), and
-  optionally choose a **landing page** — the page in your sitemap that this
-  channel's traffic arrives on. A dashed connector links the channel to its
-  landing page.
+  **label**, pick the **channel** (which sets its color and glyph), and tick one
+  or **more landing pages** — the pages this channel's traffic arrives on. A
+  dashed connector links the channel to each landing page (the card shows
+  “→ First page +N”).
 - **Re-order** — drag an entry point within the lane (a drop bar shows the
   position), or select it and press **Shift + ↑/↓**.
+- **In a journey** — when a journey starts at a channel, the canvas hides that
+  channel's usual landing lines and draws a single line (in the journey's color)
+  from the channel to the journey's **next step**, so the path reads
+  continuously even if that page isn't one of the channel's landing pages.
 - **Close the popover** — click anywhere outside it, or press Esc.
 - **Import / export** — entry points travel **with the sitemap CSV**: a sitemap
   export includes them, and importing that CSV recreates them (each channel's
-  optional landing page re-attaches by path, then title). See
+  landing pages re-attach by path, then title). See
   [Import & export](#import--export).
 
 ---
