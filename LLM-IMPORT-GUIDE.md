@@ -2,8 +2,9 @@
 
 MapStack imports **CSV**. There are two files:
 
-- a **sitemap CSV** — the page tree, and (optionally) the off-site **entry
-  points** (channels) in the *same file*; and
+- a **sitemap CSV** — the page tree, each page's optional **resources/CTAs**,
+  and (optionally) the off-site **entry points** (channels), all in the *same
+  file*; and
 - a **journeys CSV** — ordered paths through pages that already exist.
 
 This document is the precise spec for both, plus copy-paste prompts you can hand
@@ -20,6 +21,8 @@ first try. Everything here matches MapStack's actual parser.
 - [How import works](#how-import-works)
 - [Sitemap CSV](#sitemap-csv)
   - [Pages](#pages)
+  - [Page Collection rows](#page-collection-rows)
+  - [Page resources & CTAs](#page-resources--ctas)
   - [Entry-point rows (channels)](#entry-point-rows-channels)
 - [Journeys CSV](#journeys-csv)
 - [Prompt: generate a sitemap CSV](#prompt-generate-a-sitemap-csv)
@@ -30,12 +33,13 @@ first try. Everything here matches MapStack's actual parser.
 
 ## How import works
 
-- **Sitemap CSV → pages (+ entry points).** Importing from the **dashboard**
-  creates a *new project*; importing from inside an **open sitemap** (the
-  editor's import icon) adds everything as a *new version* and makes it active.
-  The same file carries the page tree **and** the off-site entry points: any row
-  whose `Type` is **"Entry point"** becomes a channel, and its optional landing
-  page re-attaches to a page by **Path first, then Title**.
+- **Sitemap CSV → pages (+ resources/CTAs + entry points).** Importing from the
+  **dashboard** creates a *new project*; importing from inside an **open
+  sitemap** (the editor's import icon) adds everything as a *new version* and
+  makes it active. The same file carries the page tree, each page's own
+  `Resources`/`CTAs`, **and** the off-site entry points: any row whose `Type`
+  is **"Entry point"** becomes a channel, and its optional landing page
+  re-attaches to a page by **Path first, then Title**.
 - **Journeys CSV → journeys.** Importing (the journeys bar's **Import** pill)
   re-attaches each step to the **current version's** pages, matched by **Path
   first, then Title**. The pages must **already exist** — so import the sitemap
@@ -50,14 +54,17 @@ first try. Everything here matches MapStack's actual parser.
 ### Header row
 
 ```
-Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing
+Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing,Resources,CTAs
 ```
 
 - Header matching is **case-insensitive and space-insensitive**.
 - Only **`Level`** and **`Title`** are required. Every other column is optional
   and may be omitted entirely (drop the column) or left blank per row.
-- The last two columns (**`Channel`**, **`Landing`**) are only used by
-  entry-point rows — omit them if your sitemap has no channels.
+- **`Channel`** is only used by entry-point rows. **`Landing`** is used by
+  entry-point rows (a channel's landing pages) AND by `Submap`/`Catalog` rows
+  (a collection's optional single landing page) — see both sections below.
+  **`Resources`**/**`CTAs`** are only used by ordinary page rows — omit any
+  of these columns if you don't need them.
 - Accepted **aliases**: `Path` ↔ `Slug`, `Page URL` ↔ `URL`, `Google Doc` ↔
   `Doc`.
 
@@ -67,13 +74,31 @@ Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing
 | --- | --- | --- | --- |
 | **Level** | ✅ | integer `0, 1, 2, …` | Tree depth. Top-level pages are `0`. A row's **parent is the nearest row above it with `Level` one less**. Increase by exactly **1** per level of nesting. |
 | **Title** | ✅ | text | The page name. Blank becomes `Untitled`. |
-| **Type** | — | `Page` or `Hierarchy label` | Anything that isn't `Hierarchy label` or `Entry point` is a **Page**. Use `Hierarchy label` for grouping/section rows that aren't real pages. Defaults to `Page`. |
+| **Type** | — | `Page`, `Hierarchy label`, `Submap`, or `Catalog` | Anything that isn't `Hierarchy label`, `Submap`, `Catalog`, or `Entry point` is a **Page**. Use `Hierarchy label` for grouping/section rows that aren't real pages. `Submap`/`Catalog` mark a **Page Collection** — see [below](#page-collection-rows). Defaults to `Page`. |
 | **Path** | — | text, e.g. `/pricing` | The URL slug / extension path. Used to match journey steps and channel landings, so keep it stable and unique. |
 | **Status** | — | `complete`, `draft`, `unassigned` | Case-insensitive. Anything unrecognized becomes `unassigned`. |
 | **Notes** | — | text | Free-form. May contain commas/newlines if quoted. |
 | **Page URL** | — | URL | The live page URL. |
 | **Google Doc** | — | URL | A linked Google Doc. |
 | **Figma** | — | URL | A linked Figma file. |
+| **Landing** | — | text (page Path or Title) | **`Submap`/`Catalog` rows only** — see [below](#page-collection-rows). |
+| **Resources** | — | see [below](#page-resources--ctas) | Recommended content links for this page (video, white paper, ebook, …). |
+| **CTAs** | — | see [below](#page-resources--ctas) | Calls-to-action for this page; the first is primary. |
+
+### Page Collection rows
+
+A **Page Collection** groups a large set of pages behind one collapsed
+canvas node. It's an ORDINARY page row in the tree (same `Level`/nesting
+rules as any other row) — its children in the file (the following rows at
+`Level + 1`) become its members automatically, nothing else marks them.
+
+| Column | Value |
+| --- | --- |
+| **Type** | `Submap` — a normal collection, opened as a focused canvas view. Or `Catalog` — for a large collection (hundreds of pages), opened as a flat, searchable list instead. **Catalog is permanent**: once imported/converted, it can't become a Page, Hierarchy label, or Submap. |
+| **Landing** | *optional* — one specific member that best represents the collection (its Path, falling back to Title). At most one value — not pipe-separated like an entry point's `Landing`. Resolved against the collection's own members first, so it can't accidentally match a same-titled page in a different collection elsewhere in the file. |
+
+A `Submap`/`Catalog` row's own `Resources`/`CTAs`/links behave exactly like
+any other page row's.
 
 **Encoding the hierarchy (important).** There are **no id or parent columns**.
 The tree is rebuilt purely from the **`Level` integer + row order**: rows are
@@ -89,6 +114,61 @@ Home                (Level 0)
   Pricing           (Level 1)
 About               (Level 0)
 ```
+
+### Page resources & CTAs
+
+A page row may recommend content assets (**`Resources`**) and calls-to-action
+(**`CTAs`**) it should drive. Both columns pack **one or more entries**,
+separated by **a real line break inside the quoted cell** (not a pipe, comma,
+or any other character). Each entry's own sub-fields are separated by
+**`;;`** (two semicolons, not one — a real asset title routinely contains a
+literal colon or semicolon, e.g. "State of AI: 2026 Edition", and a single
+`;` would silently split it in the wrong place).
+
+A line break inside a double-quoted CSV field is ordinary, valid CSV — a
+quoted field is explicitly allowed to span multiple physical lines, and
+Excel, Google Sheets, and MapStack's own parser all round-trip it correctly.
+(Entries used to be `' | '`-joined instead; that was changed because a real
+title can just as easily contain a literal `" | "` itself — an SEO-style
+"Keyword Phrase | Brand Name" title is common in the wild — which silently
+fractured one entry into two garbage ones on import. A file exported before
+this change still imports correctly: MapStack's parser only switches to the
+newline-based split when a cell actually contains one, and falls back to the
+old pipe-split otherwise.)
+
+| Column | Entry format | Notes |
+| --- | --- | --- |
+| **Resources** | `Kind;; Title;; URL` | `Kind` is one of the names below (unrecognized/blank → **Other**). |
+| **CTAs** | `Label;; URL` | The **first** CTA in the list is the page's primary CTA; the rest are secondary. |
+
+**Resource kinds**
+
+| Name |
+| --- |
+| Video |
+| White paper |
+| Ebook |
+| Solution brief |
+| Reference architecture |
+| Blog |
+| Report |
+| Other |
+
+Example cell values (each block below is ONE quoted CSV cell — the line
+break is real, inside the quotes, not a new row):
+
+```
+Resources: "White paper;; State of AI: 2026 Edition;; https://example.com/wp
+Video;; Overview video;; https://example.com/video"
+
+CTAs:      "Contact us;; https://example.com/contact
+Learn more;; https://example.com/learn"
+```
+
+> A journey may *optionally* re-rank a SUBSET of a page's resources/CTAs just
+> for its own narrative — that per-journey-step override is set in the app
+> (from a journey chip's kebab), not in any CSV; only each page's own default
+> list round-trips through import/export.
 
 ### Entry-point rows (channels)
 
@@ -138,22 +218,35 @@ MapStack's parser is RFC-4180-style. To stay safe:
 
 ### Complete example
 
+Note: the `Home` row below spans two physical lines because its `CTAs` cell
+contains a real embedded line break between its two entries — it's still one
+row (its `Level`/`Title`/etc. aren't repeated on the second line).
+
 ```csv
-"Level","Title","Type","Path","Status","Notes","Page URL","Google Doc","Figma","Channel","Landing"
-"0","Home","Page","/","complete","Primary landing page","https://example.com/","","","",""
-"1","Products","Hierarchy label","","unassigned","Section grouping","","","","",""
-"2","Widgets","Page","/products/widgets","draft","","","","","",""
-"2","Gadgets","Page","/products/gadgets","draft","Launch in Q3","","","","",""
-"1","Pricing","Page","/pricing","complete","","https://example.com/pricing","","","",""
-"0","About","Page","/about","complete","","","","","",""
-"","Google – brand terms","Entry point","","","","","","","Organic search","/"
-"","Q3 launch campaign","Entry point","","","","","","","Paid media","/ | /pricing"
-"","Newsletter","Entry point","","","","","","","Email",""
+"Level","Title","Type","Path","Status","Notes","Page URL","Google Doc","Figma","Channel","Landing","Resources","CTAs"
+"0","Home","Page","/","complete","Primary landing page","https://example.com/","","","","","White paper;; State of AI: 2026 Edition;; https://example.com/wp","Contact us;; https://example.com/contact
+Learn more;; https://example.com/learn"
+"1","Products","Hierarchy label","","unassigned","Section grouping","","","","","","",""
+"2","Widgets","Page","/products/widgets","draft","","","","","","","",""
+"2","Gadgets","Page","/products/gadgets","draft","Launch in Q3","","","","","","",""
+"1","Pricing","Page","/pricing","complete","","https://example.com/pricing","","","","","",""
+"0","About","Page","/about","complete","","","","","","","",""
+"0","White Papers","Catalog","","unassigned","","","","","","overview","",""
+"1","State of AI 2026","Page","/resources/state-of-ai","complete","","","","","","","",""
+"1","overview","Page","/resources/overview","complete","","","","","","","",""
+"","Google – brand terms","Entry point","","","","","","","Organic search","/","",""
+"","Q3 launch campaign","Entry point","","","","","","","Paid media","/ | /pricing","",""
+"","Newsletter","Entry point","","","","","","","Email","","",""
 ```
 
 This produces a two-root sitemap (`Home`, `About`) with `Products` grouping
-`Widgets`/`Gadgets`, plus three off-site channels — Google on `Home`, the Q3
-campaign on **both** `Home` and `Pricing`, and the newsletter with no landing.
+`Widgets`/`Gadgets`, plus a `White Papers` **Catalog** whose two members are
+its following `Level 1` rows (`Landing` points at `overview`, one of its own
+members — not some other page named "overview" elsewhere), plus three
+off-site channels — Google on `Home`, the Q3 campaign on **both** `Home` and
+`Pricing`, and the newsletter with no landing. `Home` also carries one
+resource and two CTAs (`Contact us` is primary, `Learn more` secondary);
+every other page has none.
 
 ---
 
@@ -211,7 +304,7 @@ builder. Output ONLY the CSV — no prose, no code fences.
 
 Rules:
 - First line is exactly this header:
-  Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing
+  Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing,Resources,CTAs
 - Wrap EVERY field in double quotes. Escape any double quote inside a field by
   doubling it ("").
 - PAGE rows: Level is the tree depth as an integer (top-level = 0; a child uses
@@ -219,8 +312,24 @@ Rules:
   one less, so list parents before children). Type is "Page" for real pages or
   "Hierarchy label" for section/grouping rows. Path is the URL slug (e.g.
   /pricing), unique. Status is one of: complete, draft, unassigned. Notes,
-  Page URL, Google Doc, Figma are optional. Leave Channel and Landing blank on
-  page rows.
+  Page URL, Google Doc, Figma are optional. Leave Channel blank on page rows.
+- OPTIONAL page collections: for a large group of similar pages (e.g. dozens of
+  location pages, a docs library), use Type "Submap" (opens as a focused canvas
+  view) or "Catalog" (opens as a flat searchable list — use this for a LARGE
+  group, hundreds of pages) instead of "Page". Its children in the file (the
+  following rows at Level + 1) automatically become its members — nothing else
+  marks them. You MAY put one member's Path (or Title) in Landing to mark it as
+  the collection's representative page. Leave Landing blank otherwise.
+- OPTIONAL page resources/CTAs: a page row may carry recommended-content links
+  in Resources and calls-to-action in CTAs. Resources entries look like
+  "Kind;; Title;; URL" (Kind is one of: Video, White paper, Ebook, Solution
+  brief, Reference architecture, Blog, Report, Other); CTAs entries look like
+  "Label;; URL". Separate multiple entries with an ACTUAL LINE BREAK inside
+  the quoted cell (press Enter within the quotes) — not a pipe or any other
+  character; a properly double-quoted CSV field is allowed to span multiple
+  physical lines, and this is still one cell in one row, not a new CSV row.
+  The FIRST CTA is primary, the rest secondary. Leave both blank if a page has
+  none.
 - OPTIONAL off-site channels: after the page rows, you MAY add entry-point rows.
   For each, set Type to "Entry point", put the label in Title, the channel in
   Channel (one of: Organic search, LLM citation, Paid media, Social post,
@@ -269,10 +378,19 @@ Before importing, confirm the file:
 
 **Sitemap CSV**
 - [ ] First line is the header (at least `Level,Title`; add `Channel,Landing` if
-      you include entry-point rows).
+      you include entry-point rows, `Resources,CTAs` if you include page
+      resources/CTAs).
 - [ ] Page rows: `Level` is an integer, children come after parents, nesting
-      increases by 1; `Type` is `Page`/`Hierarchy label`; `Status` is
-      `complete`/`draft`/`unassigned` (or blank).
+      increases by 1; `Type` is `Page`/`Hierarchy label`/`Submap`/`Catalog`;
+      `Status` is `complete`/`draft`/`unassigned` (or blank).
+- [ ] Page Collection rows (`Type` = `Submap`/`Catalog`): the rows immediately
+      following at `Level + 1` become its members; an optional `Landing`
+      value (Path or Title, not pipe-separated) names one of those members.
+- [ ] Page resources/CTAs: each `Resources`/`CTAs` entry is `;;`-separated
+      (`Kind;; Title;; URL` / `Label;; URL`), multiple entries separated by a
+      real line break inside the quoted cell (not `|` — that's the legacy
+      format, still accepted on import but no longer what MapStack itself
+      exports); an unrecognized `Kind` becomes `Other`.
 - [ ] Entry-point rows: `Type` is `Entry point`, `Channel` is a known name/key
       (or left blank → `custom`), and each `Landing` (pipe-separated for several)
       matches a page (unmatched ones are skipped).

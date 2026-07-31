@@ -1,9 +1,10 @@
 # MapStack — User Guide
 
 MapStack is a free, collaborative **sitemap builder**. You build a visual page
-tree, drag to nest and re-order pages, attach metadata and links, map out
-**user journeys** and the **off-site channels** that funnel people into your
-site, leave feedback, and collaborate live with your team.
+tree, drag to nest and re-order pages, attach metadata and links, recommend
+**resources and CTAs** per page, map out **user journeys** and the **off-site
+channels** that funnel people into your site, leave feedback, and collaborate
+live with your team.
 
 This guide walks through everything the app does. If you just want to hand an
 LLM the rules for generating import-ready files, jump to
@@ -18,16 +19,17 @@ LLM the rules for generating import-ready files, jump to
 3. [The editor at a glance](#the-editor-at-a-glance)
 4. [Building your sitemap](#building-your-sitemap)
 5. [Page details, links & status](#page-details-links--status)
-6. [Off-site entry points (channels)](#off-site-entry-points-channels)
-7. [User journeys](#user-journeys)
-8. [Comments & @-mentions](#comments--mentions)
-9. [Live collaboration](#live-collaboration)
-10. [Sharing & teams](#sharing--teams)
-11. [Versions](#versions)
-12. [Import & export](#import--export)
-13. [AI recommendations](#ai-recommendations)
-14. [Keyboard shortcuts](#keyboard-shortcuts)
-15. [Notes on availability](#notes-on-availability)
+6. [Page Collections](#page-collections)
+7. [Off-site entry points (channels)](#off-site-entry-points-channels)
+8. [User journeys](#user-journeys)
+9. [Comments & @-mentions](#comments--mentions)
+10. [Live collaboration](#live-collaboration)
+11. [Sharing & teams](#sharing--teams)
+12. [Versions](#versions)
+13. [Import & export](#import--export)
+14. [AI recommendations](#ai-recommendations)
+15. [Keyboard shortcuts](#keyboard-shortcuts)
+16. [Notes on availability](#notes-on-availability)
 
 ---
 
@@ -88,13 +90,16 @@ Enter.
 
 ### Node types
 
-A node is either:
+A node is one of:
 
 - **Page** — a real page in your site (has a path/URL, status, links).
 - **Hierarchy label** — a grouping/section label, not a page. Use these to
   organize the tree without implying a URL.
+- **Submap** or **Catalog** — a **Page Collection**: a single node standing
+  in for a large group of real pages, kept collapsed on the canvas. See
+  [Page Collections](#page-collections).
 
-Toggle the type in the node's **details panel** (Info tab → *Type*).
+Set the type in the node's **details panel** (Info tab → *Node type*).
 
 ### Re-arrange the tree
 
@@ -126,7 +131,8 @@ in-memory only — reloading or switching projects clears it.
 ## Page details, links & status
 
 Open a node's **details panel** (kebab **⋮**, or double-click behavior via the
-Rename pill). It has two tabs:
+Rename pill). It has two tabs, plus two more (feature-flagged — see
+[Notes on availability](#notes-on-availability)) for pages:
 
 ### Info tab
 
@@ -155,6 +161,88 @@ Every page carries a status, shown as a colored dot on the node:
 ### Feedback tab
 
 Per-page comments — see [Comments & @-mentions](#comments--mentions).
+
+### Resources tab
+
+Recommended content links for the page — video, white paper, ebook, solution
+brief, reference architecture, blog, report, or a custom kind. Pick a **kind**,
+add a **title** and **url**; **drag** (or select and press **Shift + ↑/↓**) to
+re-order. At least 3 blank rows are always available to fill in.
+
+### CTAs tab
+
+The page's calls-to-action — a **label** and a **url** each. Same
+add/reorder interaction as Resources. The **first** CTA is the page's
+**primary** one; the rest are secondary — drag a CTA into the first slot to
+make it primary.
+
+Both tabs' lists travel with the sitemap CSV (see
+[Import & export](#import--export)), and — one layer up — a journey can
+re-rank a SUBSET of a page's resources/CTAs just for its own narrative; see
+[User journeys](#user-journeys).
+
+---
+
+## Page Collections
+
+For content-heavy sites — a docs library, a blog archive, hundreds of
+location pages — showing every page as its own canvas node makes the map
+unusable. A **Page Collection** groups them behind one node that stays
+collapsed on the canvas, while every page inside it remains a full,
+first-class page: its own status, comments, metadata, and journey
+participation all keep working exactly as they do for any other page.
+
+A collection comes in two flavors, set from its **Node type**:
+
+### Submap
+
+The default. Opening a Submap (click its chevron) enters a focused canvas
+view of just its members — drag, rename, add children, and re-order exactly
+as you would on the main canvas. A **breadcrumb** at the top of the editor
+always shows your way back (← All sitemaps → project name → each collection
+you've entered); click any segment to jump there directly.
+
+### Catalog
+
+For a large collection — hundreds of pages — panning a submap stops being
+practical. A **Catalog** skips the canvas view entirely: its chevron opens
+straight to a flat, searchable **Pages** tab listing every member (title,
+status, journey participation), with **Open** and **Remove** actions per row.
+
+> **Catalog is permanent.** Converting a collection to a Catalog can't be
+> undone — it can't convert back to a Page, a Hierarchy label, or a Submap.
+> MapStack asks you to confirm before making the switch.
+
+Because a Catalog has no canvas to drag a new page onto, its Pages tab adds
+two extra ways to grow it, alongside the usual **+ Add pages** (pick from
+pages that already exist elsewhere in the sitemap):
+
+- **+ New page** — adds a blank page as a direct member.
+- **Import CSV** — drop a MapStack-format CSV to add many pages at once (see
+  [Import & export](#import--export)); the file's own hierarchy is ignored —
+  every row becomes a flat, direct member of this one collection.
+
+A page inside a Catalog can't change its own node type (it has to stay an
+ordinary page) — but every other field (status, notes, links, resources,
+CTAs, comments) works normally. Open any member's own panel from the Pages
+tab, and use the **← [Collection name]** link at the top of its panel to get
+back.
+
+### Converting a page
+
+Open a page's details panel → **Info** tab → **Node type**, and choose
+**Submap** or **Catalog**. Converting a page with existing children turns
+them into the collection's members automatically — nothing moves. Converting
+a Submap back to a Page or a Hierarchy label asks you to confirm if it still
+has members, since they'll become ordinary siblings of the collection on the
+canvas (a Catalog can't convert back at all — see above).
+
+### Landing page
+
+A collection can optionally point at one specific member as its **Landing
+page** — the one page that best represents the collection as a whole (e.g.
+a section's own index page). Set it from the Info tab; the picker only
+offers the collection's current members.
 
 ---
 
@@ -204,6 +292,12 @@ the canvas).
 - **Start at a channel** — a journey may *optionally* begin at an off-site
   [entry point](#off-site-entry-points-channels) instead of a page. When it
   does, the channel shows as a dashed step 1.
+- **Prioritize resources/CTAs for a step** — click a step chip's **⋮** to open
+  a small popover over that page's [Resources/CTAs](#page-details-links--status)
+  (feature-flagged). Check the ones that matter for THIS journey and drag
+  (or **Shift + ↑/↓**) to rank them — this doesn't touch the page's own
+  default order, just this journey's narrative. A dot on the **⋮** shows a
+  step already has some prioritized.
 - **Import / export** — journeys round-trip as CSV. See
   [Import & export](#import--export).
 
@@ -263,6 +357,21 @@ Open **Share** (topbar right cluster) to control access.
 or remove members, transfer team ownership, or leave. Any map you own can be
 shared into a team you belong to.
 
+### Public preview links
+
+Share a **read-only, no-account** view of your sitemap — handy for
+stakeholders who don't (yet) have a MapStack account.
+
+- Open **Share** → **Public preview link** → **Create link**, then copy the
+  URL. Anyone with the link can view the page tree, node details, and
+  existing feedback — no sign-in required.
+- Previewers can't edit anything; every editing control is hidden.
+- To leave feedback, a previewer is prompted to **create an account** first —
+  existing comments are visible, but posting a new one needs sign-in.
+- **Disable** pauses the link without losing it; **regenerate** issues a new
+  URL and permanently retires the old one.
+- Available to any project member, not just the owner.
+
 ---
 
 ## Versions
@@ -286,7 +395,10 @@ active one; the project menu (name ▾) lets you:
 
 ### Export (download menu, topbar right cluster)
 
-- **CSV** — the full page tree, one row per node, **including any off-site entry
+- **CSV** — the full page tree, one row per node, **including each page's
+  resources/CTAs** (feature-flagged), each **Page Collection** as a
+  `Submap`/`Catalog`-typed row (its members collapse to nothing extra — they
+  just round-trip as ordinary rows underneath it), and **any off-site entry
   points** (channels) as extra rows (see the
   [format spec](LLM-IMPORT-GUIDE.md#sitemap-csv)).
 - **SVG** — a crisp, standalone vector render of the sitemap.
@@ -295,10 +407,11 @@ active one; the project menu (name ▾) lets you:
 ### Import
 
 - **New sitemap** — the dashboard's upload icon: a sitemap CSV becomes a
-  brand-new project (its entry-point rows are recreated too).
+  brand-new project (its page resources/CTAs and entry-point rows are
+  recreated too).
 - **New version of the open map** — the editor's import icon: a sitemap CSV is
   added as a **new version** and made active for everyone (again including any
-  entry points in the file).
+  page resources/CTAs and entry points in the file).
 - **Journeys** — the journeys bar's **Import** pill: a journeys CSV re-attaches
   its steps to the **current version's** pages (matched by path, then title).
 
@@ -337,7 +450,9 @@ a shared account. Two modes:
 
 Some features are gated per-account and only appear if enabled for you:
 
-- **Journeys**, **entry points**, and **AI recommendations** are feature-flagged.
+- **Journeys**, **entry points**, **AI recommendations**, **public preview
+  links**, **page Resources/CTAs** (each of the two tabs its own flag), and
+  **Page Collections** are feature-flagged.
 - **Import/export** is available to everyone.
 
 If you expect a feature and don't see it, it may not be enabled for your
