@@ -47,11 +47,32 @@ teammates see you on cursors, presence avatars, and comments.
 
 ## The dashboard
 
-The dashboard lists your sitemaps and lets you create new ones.
+The dashboard lists your sitemaps and, when journeys are enabled for your
+account, your journey maps — on two tabs, **Sitemaps** and **Journey maps**,
+each showing its count. The dashboard remembers which tab you were on.
 
-- **New sitemap** — creates an empty project and drops you into the editor.
-- **Open** — click any project to open it. The open sitemap lives in the URL
-  (`#/p/<id>`), so refresh, bookmark, and the browser back button all work.
+- **+** — opens a menu to create a **Sitemap** (an empty project that drops you
+  into the editor) or a **Journey Map**. A journey map asks for a name and the
+  **source sitemap** whose pages it will step through; it is saved as a
+  journey on that sitemap, so it shows up both here and in that sitemap's own
+  journey list. You can also pick its stage model (Buyers Funnel, or JTBD
+  Content Map where enabled).
+- **Search** — the box in the header filters both tabs as you type (each
+  tab's count shows how many match, so you can see hits on the other tab). A
+  journey map also matches on its sitemap's name, persona, and stage model.
+  Esc clears it.
+- **Grid / list** — the two-icon toggle switches between cards and a compact
+  table (name, sitemap, stage model, dates, your role). Your choice is
+  remembered in this browser.
+- **Sorting** — both tabs open sorted by **last visited** (most recent first),
+  falling back to creation date for anything you haven't opened yet. In list
+  view, click a column header to sort by it; click again to flip the
+  direction. "Last visited" is tracked per browser, so it won't carry across
+  devices.
+- **Open** — click any sitemap to open it, or any journey map to open it
+  directly in Journey Canvas. The open sitemap lives in the URL (`#/p/<id>`,
+  with `?journey=<id>` for a journey), so refresh, bookmark, and the browser
+  back button all work.
 - **Import** (upload icon) — build a brand-new sitemap from a CSV file. See
   [Import & export](#import--export).
 
@@ -138,6 +159,8 @@ Rename pill). It has two tabs, plus two more (feature-flagged — see
 
 - **Type** — Page or Hierarchy label.
 - **Status** — see below.
+- **Origin** / **Priority** (pages only, feature-flagged) — see
+  [Page classification](#page-classification).
 - **Label** — the node's title.
 - **Extension path** — the URL slug for this page (e.g. `/pricing`). Pages only.
 - **Notes** — free-form notes.
@@ -157,6 +180,31 @@ Every page carries a status, shown as a colored dot on the node:
 | **Complete** | Green — done. |
 | **Draft** | Amber — in progress. |
 | **Unassigned** | No dot — not yet triaged. |
+
+### Page classification
+
+Two independent planning facets for a real page, side by side under Status
+(feature-flagged — see [Notes on availability](#notes-on-availability)). They
+carry no behavior of their own; they're there so a sitemap can double as the
+plan for building it.
+
+| Origin | Meaning |
+| --- | --- |
+| **Net-new** | Doesn't exist yet — has to be created from scratch. |
+| **Existing** | Already live and staying essentially as-is. |
+| **Migrating** | Exists somewhere else (an old site, another section) and is being brought over or reworked. |
+
+**Priority** is **High**, **Medium**, or **Low**, and shows as a small badge on
+the top-right corner of the canvas node — so you can scan a whole sitemap for
+what matters without opening anything.
+
+Both default to **Not set**, and that's a real state, not a placeholder: it
+means nobody has classified the page yet, which is deliberately distinguishable
+from someone deciding it's *Existing* or *Low*. Nothing is auto-assigned.
+
+Both travel with the sitemap CSV (`Origin` / `Priority` columns), so you can
+classify hundreds of pages in a spreadsheet and import, rather than one node at
+a time.
 
 ### Feedback tab
 
@@ -199,7 +247,7 @@ A collection comes in two flavors, set from its **Node type**:
 The default. Opening a Submap (click its chevron) enters a focused canvas
 view of just its members — drag, rename, add children, and re-order exactly
 as you would on the main canvas. A **breadcrumb** at the top of the editor
-always shows your way back (← All sitemaps → project name → each collection
+always shows your way back (← Dashboard → project name → each collection
 you've entered); click any segment to jump there directly.
 
 ### Catalog
@@ -337,6 +385,14 @@ Everything syncs live:
 - **Presence** — avatars of everyone currently viewing the map.
 - **Cursors** — teammates' cursors move in real time, and show an activity label
   (e.g. while they drag a node).
+- **Cursor chat** — press **/** while hovering the canvas to open a small
+  bubble right where your cursor is, Figma-style; it follows your cursor
+  while you type, and everyone else sees each keystroke live. Press
+  **Enter** to clear the line and start a new one (the old line fades out)
+  — it's a running thread anchored to one spot, not a single message.
+  **Esc** closes it, and it also auto-closes after a few seconds of no
+  typing. Nothing here is saved anywhere; use it for a quick "look here"
+  instead of leaving a permanent comment.
 - **Edits** — page changes, comments, journeys, and entry points all propagate
   instantly to everyone in the project.
 
@@ -440,6 +496,7 @@ a shared account. Two modes:
 | Re-order selected node among siblings | **Shift + ← / → / ↑ / ↓** |
 | Re-order selected entry point | **Shift + ↑ / ↓** |
 | Re-order focused journey step | **Shift + ← / →** |
+| Open cursor chat (while hovering the canvas) | **/** |
 | Undo | **⌘Z** (Ctrl+Z on Windows) |
 | Redo | **⌘⇧Z** (Ctrl+Shift+Z or Ctrl+Y) |
 | Close a panel / popover | **Esc** |

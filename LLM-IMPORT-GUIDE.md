@@ -54,7 +54,7 @@ first try. Everything here matches MapStack's actual parser.
 ### Header row
 
 ```
-Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing,Resources,CTAs
+Level,Title,Type,Path,Status,Origin,Priority,Notes,Page URL,Google Doc,Figma,Channel,Landing,Resources,CTAs
 ```
 
 - Header matching is **case-insensitive and space-insensitive**.
@@ -65,8 +65,11 @@ Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing,Res
   (a collection's optional single landing page) — see both sections below.
   **`Resources`**/**`CTAs`** are only used by ordinary page rows — omit any
   of these columns if you don't need them.
+- **`Origin`**/**`Priority`** are only used by ordinary page rows (a hierarchy
+  label has no origin and nothing to prioritize) — omit either column if you
+  don't need it.
 - Accepted **aliases**: `Path` ↔ `Slug`, `Page URL` ↔ `URL`, `Google Doc` ↔
-  `Doc`.
+  `Doc`, `Origin` ↔ `Page Origin`, `Priority` ↔ `Page Priority`.
 
 ### Pages
 
@@ -77,6 +80,8 @@ Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing,Res
 | **Type** | — | `Page`, `Hierarchy label`, `Submap`, or `Catalog` | Anything that isn't `Hierarchy label`, `Submap`, `Catalog`, or `Entry point` is a **Page**. Use `Hierarchy label` for grouping/section rows that aren't real pages. `Submap`/`Catalog` mark a **Page Collection** — see [below](#page-collection-rows). Defaults to `Page`. |
 | **Path** | — | text, e.g. `/pricing` | The URL slug / extension path. Used to match journey steps and channel landings, so keep it stable and unique. |
 | **Status** | — | `complete`, `draft`, `unassigned` | Case-insensitive. Anything unrecognized becomes `unassigned`. |
+| **Origin** | — | `Net-new`, `Existing`, `Migrating` | **Pages only.** Where the page comes from: doesn't exist yet / already live and staying as-is / exists elsewhere and is being brought over. Punctuation- and case-insensitive, so `net_new`, `Net-new` and `netnew` all work. Blank or unrecognized = **not classified** (left unset — never guessed at). |
+| **Priority** | — | `High`, `Medium`, `Low` | **Pages only.** How important this page is to the plan. `Med` and `High Priority`-style wording are also accepted. Blank or unrecognized = **not classified**, which is distinct from `Low`. Drives the priority badge on the canvas node. |
 | **Notes** | — | text | Free-form. May contain commas/newlines if quoted. |
 | **Page URL** | — | URL | The live page URL. |
 | **Google Doc** | — | URL | A linked Google Doc. |
@@ -304,7 +309,7 @@ builder. Output ONLY the CSV — no prose, no code fences.
 
 Rules:
 - First line is exactly this header:
-  Level,Title,Type,Path,Status,Notes,Page URL,Google Doc,Figma,Channel,Landing,Resources,CTAs
+  Level,Title,Type,Path,Status,Origin,Priority,Notes,Page URL,Google Doc,Figma,Channel,Landing,Resources,CTAs
 - Wrap EVERY field in double quotes. Escape any double quote inside a field by
   doubling it ("").
 - PAGE rows: Level is the tree depth as an integer (top-level = 0; a child uses
@@ -313,6 +318,12 @@ Rules:
   "Hierarchy label" for section/grouping rows. Path is the URL slug (e.g.
   /pricing), unique. Status is one of: complete, draft, unassigned. Notes,
   Page URL, Google Doc, Figma are optional. Leave Channel blank on page rows.
+- OPTIONAL page classification (page rows only, leave blank on Hierarchy label
+  rows): Origin is one of Net-new, Existing, Migrating — where the page comes
+  from (doesn't exist yet / already live and staying as-is / exists elsewhere
+  and is being brought over). Priority is one of High, Medium, Low. Leave
+  EITHER blank when you genuinely don't know — blank means "not classified
+  yet", which is meaningfully different from guessing "Existing" or "Low".
 - OPTIONAL page collections: for a large group of similar pages (e.g. dozens of
   location pages, a docs library), use Type "Submap" (opens as a focused canvas
   view) or "Catalog" (opens as a flat searchable list — use this for a LARGE
