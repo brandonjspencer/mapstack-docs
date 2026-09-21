@@ -26,10 +26,11 @@ LLM the rules for generating import-ready files, jump to
 10. [Live collaboration](#live-collaboration)
 11. [Sharing & teams](#sharing--teams)
 12. [Versions](#versions)
-13. [Import & export](#import--export)
-14. [AI recommendations](#ai-recommendations)
-15. [Keyboard shortcuts](#keyboard-shortcuts)
-16. [Notes on availability](#notes-on-availability)
+13. [Sitemap sync](#sitemap-sync)
+14. [Import & export](#import--export)
+15. [AI recommendations](#ai-recommendations)
+16. [Keyboard shortcuts](#keyboard-shortcuts)
+17. [Notes on availability](#notes-on-availability)
 
 ---
 
@@ -64,6 +65,10 @@ each showing its count. The dashboard remembers which tab you were on.
 - **Grid / list** — the two-icon toggle switches between cards and a compact
   table (name, sitemap, stage model, dates, your role). Your choice is
   remembered in this browser.
+- **Sync log** (shown when sitemap sync is enabled for you) — every change
+  the automatic sitemap sync made, newest first: what was added or removed,
+  in which sitemap and section, by whom, and which removals were held back
+  for review and why. A strip at the top totals the last 30 days.
 - **Sorting** — both tabs open sorted by **last visited** (most recent first),
   falling back to creation date for anything you haven't opened yet. In list
   view, click a column header to sort by it; click again to flip the
@@ -446,6 +451,25 @@ active one; the project menu (name ▾) lets you:
 > version). Creating a new version does **not** copy journeys.
 
 ---
+
+## Sitemap sync
+
+A sitemap's owner can point it at the live site's `sitemap.xml` (sitemap menu →
+**Sitemap sync…**). From then on the sitemap keeps itself current:
+
+- **Automatic updates.** When anyone with edit access opens the sitemap (and
+  every ten minutes while it stays open), new live URLs are added as pages —
+  inside the matching Catalog when there is one, otherwise at the top level —
+  and pages whose URL has disappeared from the live site are removed **only
+  when nothing would be lost**. A page with children, feedback, journey steps,
+  a collection, or a Linked Section is never removed automatically.
+- **Review what's left.** Anything held back shows in the bottom-left toast and
+  the notification bell; click through to the **Check for updates** modal to
+  add or delete those pages deliberately. The sitemap menu's **Check sitemap
+  for updates** runs the same check on demand.
+- **Sync log.** Every change, and every held-back removal with its reason, is
+  recorded in the dashboard's **Sync log** tab, newest first, with a 30-day
+  summary on top.
 
 ## Import & export
 
