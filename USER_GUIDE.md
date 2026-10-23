@@ -56,7 +56,7 @@ each showing its count. The dashboard remembers which tab you were on.
   into the editor) or a **Journey Map**. A journey map asks for a name and the
   **source sitemap** whose pages it will step through; it is saved as a
   journey on that sitemap, so it shows up both here and in that sitemap's own
-  journey list. You can also pick its stage model (Buyers Funnel, or JTBD
+  journey list. You can also pick its stage model (Click Path, or JTBD
   Content Map where enabled).
 - **Search** — the box in the header filters both tabs as you type (each
   tab's count shows how many match, so you can see hits on the other tab). A
