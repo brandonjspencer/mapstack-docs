@@ -353,6 +353,9 @@ the canvas).
   step already has some prioritized.
 - **Import / export** — journeys round-trip as CSV. See
   [Import & export](#import--export).
+- **Saved versions** — a journey map can be saved and restored on its own,
+  from the **Versions** button on the journey board. See
+  [Journey map versions](#journey-map-versions).
 
 Collapsing the journeys bar clears the canvas highlights; re-opening restores
 the active journey.
@@ -437,18 +440,55 @@ stakeholders who don't (yet) have a MapStack account.
 
 ## Versions
 
+There are two kinds of saved version: versions of a **sitemap** (its page tree)
+and versions of a single **journey map**. They're independent — saving or
+restoring one never touches the other.
+
+### Sitemap versions
+
 A sitemap keeps up to **3 saved versions** (rolling — the oldest non-current one
 is pruned when you add a fourth). The **version chip** in the topbar shows the
-active one; the project menu (name ▾) lets you:
+active one. Open the list from the **Versions** icon in the editor's left rail,
+or from the project menu (name ▾):
 
 - **+ New version** — snapshots the current tree into a new version.
 - **Switch** — click a version to make it active. Switching is **global**:
   everyone follows the active version live.
-- **Delete** — remove a non-current version.
-- **Save as** — duplicate the whole sitemap into a **new project** you own.
+- **Rename** (✎, project menu) — any member can rename any version.
+- **Delete** (✕, project menu) — remove a non-current version.
+- **Save as** (project menu) — duplicate the whole sitemap into a **new
+  project** you own, with its journey maps, entry points, resources and CTAs.
+  Comments and saved journey-map versions stay with the original.
 
 > Journeys and entry points are tied to a specific version (page ids differ per
 > version). Creating a new version does **not** copy journeys.
+
+### Journey map versions
+
+On any journey map (Click Path, Content Map or Activation Map), the
+**Versions** button next to undo/redo opens that map's saved versions.
+
+- **Save version** — saves the map as it stands under a name you choose
+  (it defaults to "Version 1", "Version 2", …). Each version lists who saved it,
+  when, and how many cards and arrows (or steps) it held. A map keeps up to
+  **25** saved versions; delete one to save another.
+- **Restore** — puts every card, arrow, picture and setting (stage model,
+  persona fields, column order) back the way it was when that version was
+  saved. Cards added since are removed, along with their comments. The map's
+  name, comments on cards that survive, and the sitemap itself are left alone.
+- **Restoring is reversible.** Before a restore, MapStack saves the board as it
+  is now as an **Auto-saved** version ("Before restoring …") at the top of the
+  list, so you can go back. The newest 5 auto-saved versions are kept; they
+  don't count toward the 25.
+- **Pages deleted since** — if a sitemap page a card pointed at has been
+  deleted since the version was saved, the restored card comes back as a
+  proposed card under its saved title. A Click Path step whose page is gone is
+  left out.
+- **Undo history** on the board starts fresh after a restore.
+- **Rename** (pencil) and **delete** (trash can — click it, then **Delete**) work
+  from the list.
+- Everyone on the sitemap sees the list; only editors can save, restore,
+  rename or delete.
 
 ---
 
