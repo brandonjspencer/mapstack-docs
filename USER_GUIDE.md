@@ -360,6 +360,29 @@ the canvas).
 Collapsing the journeys bar clears the canvas highlights; re-opening restores
 the active journey.
 
+### Card pictures on an Activation Map
+
+**Page cards** and **resource cards** on an Activation Map can show a picture
+at the top. Open the card, then use the icons in the **Thumbnail** section of
+its drawer. There are three ways to add one:
+
+- **Figma link** — paste a link to the file or frame. MapStack renders the
+  frame for everyone on the map, including people who aren't signed in to
+  Figma. A page card with no link of its own uses its sitemap page's Figma link.
+- **Screenshot of its URL** — the camera button captures the card's live page.
+  On a page card that's its sitemap page's URL; on a resource card it's the
+  resource's own URL (a white paper's landing page, a blog post, and so on).
+  The button only appears when the card has a URL.
+- **Upload or paste** — drop an image on the thumbnail, click the upload icon,
+  or paste a copied image (for example Figma's *Copy as PNG*). Only a small
+  preview is stored.
+
+A resource card keeps its kind label (*White paper*, *Reference
+architecture*, …) as a small tag over the picture. Figma pictures refresh
+every few hours and URL screenshots weekly, whenever an editor opens the map;
+an uploaded image is never replaced. Remove a picture with the image icon in
+the same row. Channel cards show their ad creative instead.
+
 ---
 
 ## Comments & @-mentions
