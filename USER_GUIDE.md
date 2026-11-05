@@ -114,6 +114,22 @@ Hover any node to reveal its **+** buttons:
 Every new node starts as an editable *Untitled* page — type its name and press
 Enter.
 
+### Pages from the content library
+
+Instead of typing a page in by hand, you can pull a real page from Everpure's
+content library, with its title, URL and extension path filled in. Search by
+name or URL (for example *flashblade*, */solutions/ai* or *homepage*).
+
+- **Add one** — **+ Page from library** in the canvas toolbar adds it under the
+  page whose details are open (or as a top-level page). A page's details panel
+  has the same button under *Child pages*, and a Page Collection has
+  **+ From library** on its Pages tab.
+- **Swap one in** — to turn a page you created by hand into a library page,
+  open its details and click **Swap for a library page** under *Links*. The
+  pick replaces the page's label, URL and extension path. It keeps its place
+  in the tree, its child pages, comments, journey steps and everything else.
+  **⌘Z** undoes the swap.
+
 ### Node types
 
 A node is one of:
@@ -171,6 +187,9 @@ Rename pill). It has two tabs, plus two more (feature-flagged — see
 - **Notes** — free-form notes.
 - **Links** (pages only) — a **live page URL**, a **Google Doc**, and a
   **Figma** file.
+  - **Swap for a library page** replaces the label, URL and path with a page
+    from the content library — see
+    [Pages from the content library](#pages-from-the-content-library).
   - The Google Doc and Figma links each have an **⤢ expand** button that opens
     an in-panel **preview**: the panel widens and embeds a read-only view. Edit
     opens the source in a new tab. Both require link-sharing to be on for the
@@ -597,6 +616,8 @@ Some features are gated per-account and only appear if enabled for you:
 - **Journeys**, **entry points**, **AI recommendations**, **public preview
   links**, **page Resources/CTAs** (each of the two tabs its own flag), and
   **Page Collections** are feature-flagged.
+- **Pages from the content library** (adding and swapping) come with the
+  Journey Activation Map feature.
 - **Import/export** is available to everyone.
 
 If you expect a feature and don't see it, it may not be enabled for your
