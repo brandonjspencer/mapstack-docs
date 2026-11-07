@@ -379,6 +379,44 @@ the canvas).
 Collapsing the journeys bar clears the canvas highlights; re-opening restores
 the active journey.
 
+### Paths on an Activation Map
+
+The **Paths** bar along the top of an Activation Map shows only the routes you
+pick, which helps a dense map read cleanly when you present it.
+
+- **From** — pick one or more starting cards (usually channels in *Entry
+  points*). The map shows everything reachable from them along the arrows.
+- **Via** — narrow to paths whose first arrow is tagged **Retarget** or
+  **Prospecting**.
+- **Through** — a card's **⋮** menu has *Show paths through this card*:
+  everything that leads into it and everything it leads to.
+- **Hide others / Dim others** — take everything else off the board, or just
+  fade it. **Clear all** shows the whole map again.
+
+#### Saved paths
+
+The filters above follow every arrow out of every card they reach, so a route
+through a card several audiences share picks up the other audiences' arrows
+too. A **saved path** follows only the arrows you choose:
+
+1. Click **+ New path** in the Paths bar.
+2. Click each arrow the path should follow — click again to take one out. The
+   arrows you've picked stand out and the rest of the map dims; the bar counts
+   arrows and cards as you go.
+3. Give it a name (for example *Data Leader · ABM*), pick a colour, and click
+   **Save path**.
+
+Saved paths are listed first in the **From** menu. Choosing one shows exactly
+those arrows and the cards they connect, including arrows that belong to a
+page version or ad that isn't currently showing. The ✎ next to a path changes
+its name, colour or arrows; the trash can deletes it. Everyone on the map sees
+its saved paths; only editors can create or change them. ⌘Z undoes path
+changes, deleting an arrow from the map also removes it from any path, and
+**Save as** and saved map versions carry paths along.
+
+The paths you've chosen are kept in the page's link, so copying the URL — or a
+public preview link — shares the map already filtered.
+
 ### Card pictures on an Activation Map
 
 **Page cards** and **resource cards** on an Activation Map can show a picture
