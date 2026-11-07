@@ -440,6 +440,24 @@ every few hours and URL screenshots weekly, whenever an editor opens the map;
 an uploaded image is never replaced. Remove a picture with the image icon in
 the same row. Channel cards show their ad creative instead.
 
+### Assets on an Activation Map page card
+
+A page card shows its **Primary CTA (1)** and **Secondary CTA (2)** under the
+title. To see everything else on the page, click the **N assets** count at the
+card's top-left: the card opens to list every asset, in order. Click the count
+again to go back to just the CTAs. Each card remembers whether it's open, per
+map, in your browser.
+
+- **Reorder** — drag a row by its grip (a blue line shows where it will land),
+  or click the grip and press **↑ / ↓**. Dragging a row moves only the asset;
+  the card stays in its column. ⌘Z undoes a move.
+- **The CTAs always lead** — the Primary comes first and the Secondary second,
+  and they can't be dragged. Making another asset the Primary or Secondary in
+  the card's details moves it into that spot; the rest keep the order you
+  gave them.
+- The card's details panel lists assets in the same order. On a public preview
+  link the list opens but can't be reordered.
+
 ---
 
 ## Comments & @-mentions
