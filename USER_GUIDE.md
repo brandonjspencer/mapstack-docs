@@ -271,8 +271,8 @@ A collection comes in two flavors, set from its **Node type**:
 The default. Opening a Submap (click its chevron) enters a focused canvas
 view of just its members — drag, rename, add children, and re-order exactly
 as you would on the main canvas. A **breadcrumb** at the top of the editor
-always shows your way back (← Dashboard → project name → each collection
-you've entered); click any segment to jump there directly.
+always shows your way back (Dashboard › Sitemap › each collection you've
+entered); click any segment to jump there directly.
 
 ### Catalog
 
@@ -376,6 +376,45 @@ the canvas).
   from the **Versions** button on the journey board. See
   [Journey map versions](#journey-map-versions).
 
+### The journey board
+
+Opening a journey shows it full-screen as a board, in three bars:
+
+- **Top bar** — the breadcrumb (*Dashboard › Sitemap › journey name*; click
+  *Sitemap* to go back to the canvas, or the pencil to rename the journey),
+  then, on the right, who else is here and the **Click Path / Content Map /
+  Activation Map** switch.
+- **Filter row** — the Paths bar on an Activation Map, Persona / Entry source
+  / Engagement / Industry on a Click Path (*Any* means no filter), or the
+  committee picker on a Content Map.
+- **Bottom bar** — **undo / redo** and **Versions** on the left, then the
+  map's counts (or a Click Path's route). On the right: **Share** on an
+  Activation Map, **Export CSV** on the other two, and **Regenerate** and
+  **Enrich** on a Click Path.
+
+Click a card to open its details on the right, with **Details** and
+**Feedback** tabs (the Feedback tab shows how many comments it has).
+
+### Activation Map cards
+
+Each card on an Activation Map reads top to bottom:
+
+- **Picture** — only when the card has one (a page's thumbnail, a channel's
+  ad). A card without one is simply shorter.
+- **Title and path** — the title wraps to two lines.
+- **Primary and Secondary CTA** — chips marked **1** and **2**. When a CTA has
+  its own arrow, the arrow starts at its chip. **N assets** under them opens
+  the full list (see below).
+- **Badges** — *New*, *Gated* and the like.
+- **Arrives from** — the channels with an arrow straight to the card.
+- **Footer** — what the card is (*Page*, *Proposed page*, *Blog*, *Report*,
+  *Channel*…), tinted by kind, with the notes **ⓘ** (hover to read them) and
+  the number of open comments.
+
+Page cards are green, resource cards orange with a folded corner, and channel
+cards neutral; proposed cards have a dashed outline. A selected page card
+stays green; other cards turn orange when selected.
+
 Collapsing the journeys bar clears the canvas highlights; re-opening restores
 the active journey.
 
@@ -434,8 +473,8 @@ its drawer. There are three ways to add one:
   or paste a copied image (for example Figma's *Copy as PNG*). Only a small
   preview is stored.
 
-A resource card keeps its kind label (*White paper*, *Reference
-architecture*, …) as a small tag over the picture. Figma pictures refresh
+A resource card's kind (*White paper*, *Reference architecture*, …) stays in
+its footer. Figma pictures refresh
 every few hours and URL screenshots weekly, whenever an editor opens the map;
 an uploaded image is never replaced. Remove a picture with the image icon in
 the same row. Channel cards show their ad creative instead.
@@ -443,9 +482,9 @@ the same row. Channel cards show their ad creative instead.
 ### Assets on an Activation Map page card
 
 A page card shows its **Primary CTA (1)** and **Secondary CTA (2)** under the
-title. To see everything else on the page, click the **N assets** count at the
-card's top-left: the card opens to list every asset, in order. Click the count
-again to go back to just the CTAs. Each card remembers whether it's open, per
+title. To see everything else on the page, click **N assets** just below them:
+the card opens to list every asset, in order. Click **Show less** to go back
+to just the CTAs. Each card remembers whether it's open, per
 map, in your browser.
 
 - **Reorder** — drag a row by its grip (a blue line shows where it will land),
@@ -564,7 +603,8 @@ or from the project menu (name ▾):
 ### Journey map versions
 
 On any journey map (Click Path, Content Map or Activation Map), the
-**Versions** button next to undo/redo opens that map's saved versions.
+**Versions** button in the bottom bar, next to undo/redo, opens that map's
+saved versions.
 
 - **Save version** — saves the map as it stands under a name you choose
   (it defaults to "Version 1", "Version 2", …). Each version lists who saved it,
