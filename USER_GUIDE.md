@@ -92,10 +92,16 @@ and its top-level pages run **horizontally**, and deeper levels stack
 **Topbar (left → right):** brand · project name ▾ · version chip · live page
 count.
 
-**Topbar (right cluster):** journeys · AI · comments · import · download ·
-share. (Journeys and AI appear only if enabled for your account.)
+**Left rail:** Pages (the tree as an outline, with search) · Journeys ·
+Comments · Versions. Each opens a panel beside the canvas.
 
-**Canvas controls (bottom-left):** zoom in/out/fit, then undo/redo below them.
+**Canvas toolbar (top right):** who's here · entry points · AI · import ·
+download · Share. (Journeys, entry points and AI appear only if enabled for
+your account.) A page's details panel and the AI panel open beside the
+canvas, so the toolbar stays in view.
+
+**Canvas controls (bottom-left):** zoom in/out/fit, then undo/redo and the
+keyboard-shortcuts list below them.
 
 **Panning & zoom:** two-finger scroll pans, pinch zooms. The **Fit** control
 frames the whole map.
@@ -157,7 +163,7 @@ Set the type in the node's **details panel** (Info tab → *Node type*).
 
 - **Collapse/expand** a branch with the chevron on a parent node (view-only —
   not saved).
-- **Rename / Delete** from the pill on the node's top border, or the **⋮** kebab
+- **Rename / Delete** from the pill on the node's top border, or the card's **⋮** menu
   (top-right) which opens the details panel.
 - Deletes always use an in-app confirm dialog.
 
@@ -281,8 +287,9 @@ practical. A **Catalog** skips the canvas view entirely: its chevron opens
 straight to a flat, searchable **Pages** tab listing every member (title,
 status, journey participation), with **Open** and **Remove** actions per row.
 
-> **Catalog is permanent.** Converting a collection to a Catalog can't be
-> undone — it can't convert back to a Page, a Hierarchy label, or a Submap.
+> **A big Catalog stays a Catalog.** While a Catalog has 30 pages or fewer
+> it can convert back to a Page, a Hierarchy label or a Submap. Past 30 the
+> change is permanent, since a submap of hundreds of pages isn't practical.
 > MapStack asks you to confirm before making the switch.
 
 Because a Catalog has no canvas to drag a new page onto, its Pages tab adds
@@ -307,7 +314,8 @@ Open a page's details panel → **Info** tab → **Node type**, and choose
 them into the collection's members automatically — nothing moves. Converting
 a Submap back to a Page or a Hierarchy label asks you to confirm if it still
 has members, since they'll become ordinary siblings of the collection on the
-canvas (a Catalog can't convert back at all — see above).
+canvas (a Catalog can only convert back while it has 30 pages or fewer —
+see above).
 
 ### Landing page
 
@@ -350,21 +358,21 @@ left** of the sitemap.
 ## User journeys
 
 A **journey** is an ordered path through your pages — the route you want a
-visitor to take. Open the **journeys bar** from the topbar (it drops down above
-the canvas).
+visitor to take. Open **Journeys** in the left rail: a panel lists the
+sitemap's journeys, and picking one shows its steps as a numbered list.
 
-- **Create** — *+ New journey*. Give it a name (double-click a journey pill to
-  rename) and a **color** (swatch → palette).
+- **Create** — *+ New journey*. Give it a name (the pencil, or double-click
+  the name, renames it) and a **color** (swatch → palette).
 - **Add steps** — turn on **+ Add steps**, then click nodes on the canvas to
   append them as steps. The active journey highlights its member nodes (accent
   border + a numbered step badge) and dims the rest.
-- **Re-order steps** — in the journey flow strip, **drag** a step chip (a drop
-  bar shows where it lands) or focus a chip and press **Shift + ←/→**. Click a
-  chip to center that page on the canvas; **✕** removes it.
+- **Re-order steps** — in the step list, **drag** a step (a line shows where
+  it lands) or focus a step and press **Shift + ↑/↓**. Click a step to center
+  that page on the canvas; **✕** removes it.
 - **Start at a channel** — a journey may *optionally* begin at an off-site
   [entry point](#off-site-entry-points-channels) instead of a page. When it
   does, the channel shows as a dashed step 1.
-- **Prioritize resources/CTAs for a step** — click a step chip's **⋮** to open
+- **Prioritize resources/CTAs for a step** — click a step's **⋮** to open
   a small popover over that page's [Resources/CTAs](#page-details-links--status)
   (feature-flagged). Check the ones that matter for THIS journey and drag
   (or **Shift + ↑/↓**) to rank them — this doesn't touch the page's own
@@ -415,8 +423,8 @@ Page cards are green, resource cards orange with a folded corner, and channel
 cards neutral; proposed cards have a dashed outline. A selected page card
 stays green; other cards turn orange when selected.
 
-Collapsing the journeys bar clears the canvas highlights; re-opening restores
-the active journey.
+Going back to the journey list (or closing the panel) clears the canvas
+highlights; picking the journey again restores them.
 
 ### Paths on an Activation Map
 
@@ -506,8 +514,8 @@ UI:
 
 - **Page feedback** — the **Feedback tab** in a node's details panel. Each page
   node shows a badge with its count of **unresolved** comments.
-- **Sitemap comments** — general comments on the whole map, via the **comment
-  icon** in the topbar's right cluster.
+- **Sitemap comments** — general comments on the whole map, via **Comments**
+  in the left rail.
 
 In either composer, type **@** to mention a teammate. Mentioned members get an
 **email** with a deep link straight to the comment (the node's Feedback tab, or
@@ -545,14 +553,16 @@ Everything syncs live:
 
 ## Sharing & teams
 
-Open **Share** (topbar right cluster) to control access.
+Open **Share** (top right of the canvas) to control access.
 
-- **Invite people** — type-ahead search by name or email; invited members get
-  editor access.
+- **Add people** — type-ahead search by name or email. People you add join as
+  **viewers** (they can read everything and comment); the owner can switch
+  anyone to **Editor** from the role menu next to their name.
 - **Share into a team** — the same search also matches your **teams** (tagged
   *Team*). Sharing a map into a team gives every team member access.
-- **Make owner** — the owner can hand ownership to another member (confirm step;
-  the previous owner stays on as an editor).
+- **Make owner** — from the same role menu, the owner can hand ownership to
+  another member (confirm step; the previous owner stays on as an editor).
+  **Remove access** is there too.
 
 **Teams** (account menu → *Teams*) are named workspaces. Create a team, invite
 or remove members, transfer team ownership, or leave. Any map you own can be
@@ -651,7 +661,7 @@ A sitemap's owner can point it at the live site's `sitemap.xml` (sitemap menu �
 
 ## Import & export
 
-### Export (download menu, topbar right cluster)
+### Export (download menu, canvas toolbar)
 
 - **CSV** — the full page tree, one row per node, **including each page's
   resources/CTAs** (feature-flagged), each **Page Collection** as a
@@ -670,7 +680,7 @@ A sitemap's owner can point it at the live site's `sitemap.xml` (sitemap menu �
 - **New version of the open map** — the editor's import icon: a sitemap CSV is
   added as a **new version** and made active for everyone (again including any
   page resources/CTAs and entry points in the file).
-- **Journeys** — the journeys bar's **Import** pill: a journeys CSV re-attaches
+- **Journeys** — the journeys panel's **Upload** button: a journeys CSV re-attaches
   its steps to the **current version's** pages (matched by path, then title).
 
 The exact CSV shapes — and copy-paste prompts for generating them with an LLM —
@@ -680,11 +690,11 @@ are in the **[LLM Import Guide](LLM-IMPORT-GUIDE.md)**.
 
 ## AI recommendations
 
-When enabled, a **sparkle icon** in the topbar opens the AI panel. It uses
-**your own OpenRouter key** (added under *My Profile*), so nothing is billed to
-a shared account. Two modes:
+When enabled, a **sparkle icon** in the canvas toolbar opens the AI panel. It
+uses **your own OpenRouter key** (added under *My profile*), so nothing is
+billed to a shared account. Two actions:
 
-- **Optimize** — reviews your sitemap and returns severity-tagged
+- **Review this sitemap** — returns severity-tagged
   recommendations; click one to center the page it refers to.
 - **Suggest a journey** — from an optional goal, proposes an ordered journey you
   can preview and create with one click.
