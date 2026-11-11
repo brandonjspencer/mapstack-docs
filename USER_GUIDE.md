@@ -426,6 +426,14 @@ stays green; other cards turn orange when selected.
 Going back to the journey list (or closing the panel) clears the canvas
 highlights; picking the journey again restores them.
 
+**Moving and duplicating cards.** Drag a card to move it to another phase or
+another spot in its column. Hold **Option** (⌥; **Ctrl** on Windows) while you
+drag to drop a **copy** instead: the line turns green and reads **+ Copy**. The
+copy keeps everything in the card's details: its picture, versions and their
+pictures, notes, badges, assets with their Primary / Secondary CTA, and a
+channel's ads. It starts with no arrows, comments or saved paths, so you can
+link it to different cards. The original stays where it was. **⌘Z** undoes it.
+
 ### Paths on an Activation Map
 
 The **Paths** bar along the top of an Activation Map shows only the routes you
