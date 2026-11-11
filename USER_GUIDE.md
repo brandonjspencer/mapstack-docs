@@ -420,7 +420,10 @@ Each card on an Activation Map reads top to bottom:
   the number of open comments.
 
 Page cards are green, resource cards orange with a folded corner, and channel
-cards neutral; proposed cards have a dashed outline. A selected page card
+cards neutral; proposed cards have a dashed outline. When a phase holds both,
+its **pages stack on the left and its resources on the right**, so an arrow
+from a page to a resource runs straight across. A new card goes to its own
+side automatically, and a dragged card always lands among its own kind. A selected page card
 stays green; other cards turn orange when selected.
 
 Going back to the journey list (or closing the panel) clears the canvas
