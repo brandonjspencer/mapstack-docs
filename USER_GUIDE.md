@@ -515,6 +515,13 @@ map, in your browser.
   gave them.
 - The card's details panel lists assets in the same order. On a public preview
   link the list opens but can't be reordered.
+- **Linked resources are listed for you** — when the page has an arrow to a
+  resource card (a white paper, a demo, a guide), that resource shows in the
+  page's asset list with a link mark, and in the details panel tagged
+  **Linked**. You don't have to add it by hand. Give it the **1** or **2** spot
+  to make it the Primary or Secondary CTA; the page's arrow to it then starts
+  at that chip. A linked asset stays while the arrow does, so delete the arrow
+  to take it off the card. **+ Add asset** still adds anything else by hand.
 
 ---
 
